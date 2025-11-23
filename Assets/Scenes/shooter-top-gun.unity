@@ -1098,6 +1098,11 @@ MonoBehaviour:
   - m_Rig: {fileID: 1409618557}
     m_Active: 1
   m_Effectors: []
+--- !u!95 &497686162 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: eed3b1267cda6fe4c9d7cb08f3708de5, type: 3}
+  m_PrefabInstance: {fileID: 497686150}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &556007466
 GameObject:
   m_ObjectHideFlags: 0
@@ -1617,6 +1622,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e3aae0769185f745ba45d04097b1fb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  anim: {fileID: 497686162}
   gunsTransform:
   - {fileID: 331408413}
   - {fileID: 866325530}
@@ -3103,13 +3109,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1983155734}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.41532844, y: 0, z: 0, w: 0.90967155}
-  m_LocalPosition: {x: 0, y: 7.08, z: -4.66}
+  m_LocalRotation: {x: 0.47485638, y: 0, z: 0, w: 0.88006335}
+  m_LocalPosition: {x: 0, y: 6.33, z: -3.39}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 49.08, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 56.7, y: 0, z: 0}
 --- !u!114 &1983155738
 MonoBehaviour:
   m_ObjectHideFlags: 0
