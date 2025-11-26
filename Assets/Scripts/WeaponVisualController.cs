@@ -1,9 +1,10 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 
 public class WeaponVisualController : MonoBehaviour
 {
-    [SerializeField] private Animator anim; 
+    [SerializeField] private Animator anim;
     [SerializeField] private Transform[] gunsTransform;
     [SerializeField] private Transform pistol;
     [SerializeField] private Transform revolver;
@@ -11,14 +12,41 @@ public class WeaponVisualController : MonoBehaviour
     [SerializeField] private Transform shotgun;
     [SerializeField] private Transform rifle;
     private Transform currentGun;
+    [Header("Rig")]
+    [SerializeField] private float rigincreaseSpeed = 2f;
+    private bool rigShouldIncrease = false;
     [Header("Left hand IK")]
     [SerializeField] private Transform leftHandIKTarget;
+    private Rig rig;
     private void Start()
     {
         SwitchOn(pistol);
+        rig = GetComponentInChildren<Rig>();
     }
 
     private void Update()
+    {
+        CheckWeaponSwitch();
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            anim.SetTrigger("Reload");
+            rig.weight = 0;
+
+        }
+
+        if (rigShouldIncrease)
+        {
+            rig.weight += rigincreaseSpeed * Time.deltaTime;
+            if (rig.weight >= 1)
+            {
+                rigShouldIncrease = false;
+            }
+        }
+    }
+
+    public void EnableRigIncrease() => rigShouldIncrease = true;
+
+    private void CheckWeaponSwitch()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
