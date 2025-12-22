@@ -1097,7 +1097,15 @@ MonoBehaviour:
   m_RigLayers:
   - m_Rig: {fileID: 1409618557}
     m_Active: 1
-  m_Effectors: []
+  m_Effectors:
+  - m_Transform: {fileID: 942176528}
+    m_Style:
+      shape: {fileID: 4300000, guid: c6793350c150f456688e39a81f97364a, type: 2}
+      color: {r: 1, g: 0, b: 0, a: 0.5}
+      size: 0.1
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0}
+    m_Visible: 1
 --- !u!95 &497686162 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: eed3b1267cda6fe4c9d7cb08f3708de5, type: 3}
@@ -1619,7 +1627,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 942176528}
-  - component: {fileID: 942176529}
   m_Layer: 0
   m_Name: Weapon_Holder
   m_TagString: Untagged
@@ -1648,32 +1655,6 @@ Transform:
   - {fileID: 1929919748}
   m_Father: {fileID: 169410018}
   m_LocalEulerAnglesHint: {x: -90, y: 110, z: 0}
---- !u!114 &942176529
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 942176527}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e3aae0769185f745ba45d04097b1fb9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  anim: {fileID: 497686162}
-  gunsTransform:
-  - {fileID: 331408413}
-  - {fileID: 866325530}
-  - {fileID: 1104300435}
-  - {fileID: 484897960}
-  - {fileID: 1751717189}
-  pistol: {fileID: 331408413}
-  revolver: {fileID: 866325530}
-  autoRifle: {fileID: 1104300435}
-  shotgun: {fileID: 484897960}
-  rifle: {fileID: 1751717189}
-  rigincreaseSpeed: 2
-  leftHandIKTarget: {fileID: 453357521}
 --- !u!1 &960466831
 GameObject:
   m_ObjectHideFlags: 0

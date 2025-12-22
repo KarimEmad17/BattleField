@@ -18,10 +18,15 @@ public class WeaponVisualController : MonoBehaviour
     [Header("Left hand IK")]
     [SerializeField] private Transform leftHandIKTarget;
     private Rig rig;
+
+    private void Awake()
+    {
+        rig = GetComponentInChildren<Rig>();
+    }
     private void Start()
     {
         SwitchOn(pistol);
-        rig = GetComponentInChildren<Rig>();
+       
     }
 
     private void Update()
@@ -30,7 +35,7 @@ public class WeaponVisualController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {
             anim.SetTrigger("Reload");
-            rig.weight = 0;
+            rig.weight = 0.15f;
 
         }
 
