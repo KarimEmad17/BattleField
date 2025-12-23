@@ -912,7 +912,12 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: ce534c1a012367a4e8d0d15d5c3ca64d, type: 2}
     - target: {fileID: 5866666021909216657, guid: eed3b1267cda6fe4c9d7cb08f3708de5, type: 3}
       propertyPath: m_WarningMessage
-      value: 
+      value: "\nBinding warning: Some generic clip(s) animate transforms that are
+        already bound by a Humanoid avatar. These transforms can only be changed
+        by Humanoid clips.\n\tTransform 'mixamorig:Head'\n\tTransform 'mixamorig:LeftArm'\n\tTransform
+        'mixamorig:RightHand'\n\tTransform 'mixamorig:LeftForeArm'\n\tTransform 'mixamorig:RightForeArm'\n\tTransform
+        'mixamorig:Neck'\n\tTransform 'mixamorig:LeftHand'\n\tTransform 'mixamorig:Head'\n\tTransform
+        'mixamorig:LeftArm'\n\tTransform 'mixamorig:RightHand'\n\tand more ..."
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1135,8 +1140,10 @@ MonoBehaviour:
   autoRifle: {fileID: 1104300435}
   shotgun: {fileID: 484897960}
   rifle: {fileID: 1751717189}
-  rigincreaseSpeed: 2
+  rigincreaseSpeed: 2.75
+  leftHandIK: {fileID: 556007468}
   leftHandIKTarget: {fileID: 453357521}
+  leftHandIKWeightSpeed: 2.5
 --- !u!114 &497686164
 MonoBehaviour:
   m_ObjectHideFlags: 0

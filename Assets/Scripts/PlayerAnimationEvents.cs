@@ -13,4 +13,15 @@ public class PlayerAnimationEvents : MonoBehaviour
         visualController.EnableRigIncrease();
         //refile bullet
     }
+
+    public void ReturnRig()
+    {
+        visualController.EnableRigIncrease();
+        visualController.EnableLeftHandIKIncrease();
+    }
+    public void GrabWeaponIsOver()
+    {
+       
+        visualController.SetBusyGrabingWeapon(false);
+    }
 }
