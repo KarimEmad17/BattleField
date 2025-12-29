@@ -7,7 +7,7 @@ public class PlayerWeaponController : MonoBehaviour
     private void Start()
     {
         player = GetComponent<Player>();
-        player.controllers.Player.Attack.performed += ctx => Shoot();
+        player.controls.Player.Attack.performed += ctx => Shoot();
     }
     private void Shoot()
     {

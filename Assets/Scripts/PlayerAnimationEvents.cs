@@ -2,22 +2,22 @@ using UnityEngine;
 
 public class PlayerAnimationEvents : MonoBehaviour
 {
-   private WeaponVisualController visualController;
+   private PlayerWeaponVisuals visualController;
     void Start()
     {
-        visualController = GetComponent<WeaponVisualController>();
+        visualController = GetComponent<PlayerWeaponVisuals>();
     }
 
     public void ReoloadIsOver()
     {
-        visualController.EnableRigIncrease();
+        visualController.MaximizeRigWeight();
         //refile bullet
     }
 
     public void ReturnRig()
     {
-        visualController.EnableRigIncrease();
-        visualController.EnableLeftHandIKIncrease();
+        visualController.MaximizeRigWeight();
+        visualController.MaximizeLeftHandIKIncrease();
     }
     public void GrabWeaponIsOver()
     {

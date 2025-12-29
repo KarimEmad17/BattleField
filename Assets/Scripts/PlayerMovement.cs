@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -8,21 +9,19 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Inputs")]
     private InputSystem_Actions controllers;
-    private Vector2 movementInput;
+    public Vector2 movementInput { get; private set; }
     private Vector2 mouseInput;
 
     [Header("MovementSetting")]
     [SerializeField] private float walkSpeed = 1.5f;
     [SerializeField] private float runSpeed = 3f;
+    [SerializeField] private float rotationSpeed = 10f;
+    private Vector3 MoveDirection;
     private float Speed;
 
     [Header("Animation Data")]
     private bool isRunning;
-    private Vector3 MoveDirection;
 
-    [Header("Aim Setting")]
-    [SerializeField] private LayerMask aimLayerMask;
-    [SerializeField] private Transform aim;
 
     [Header("Gravity")]
     private float velocityY;
@@ -34,28 +33,28 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
-        
+
         player = GetComponent<Player>();
         animator = GetComponentInChildren<Animator>();
         Speed = walkSpeed;
-        
+
         AssignInputEvents();
     }
 
     // Update is called once per frame
     void Update()
     {
-       
+
         ApplyMovement();
-        ApplyAim();
+        ApplyRotation();
         AnimatorController();
     }
 
-    
+
 
     private void AssignInputEvents()
     {
-        controllers = player.controllers;
+        controllers = player.controls;
         controllers.Player.Move.performed += ctx => movementInput = ctx.ReadValue<Vector2>();
         controllers.Player.Move.canceled += ctx => movementInput = Vector2.zero;
         controllers.Player.Look.performed += ctx => mouseInput = ctx.ReadValue<Vector2>();
@@ -73,33 +72,24 @@ public class PlayerMovement : MonoBehaviour
             isRunning = false;
             Speed = walkSpeed;
         };
-       
+
     }
     private void AnimatorController()
     {
         float xVelocity = Vector3.Dot(MoveDirection.normalized, transform.right);
         float zVelocity = Vector3.Dot(MoveDirection.normalized, transform.forward);
-        animator.SetFloat("xVelocity", xVelocity,0.1f,Time.deltaTime);
-        animator.SetFloat("zVelocity", zVelocity,0.1f,Time.deltaTime);
-        bool PlayAnimationRunning = MoveDirection.magnitude > 0f && isRunning;    
+        animator.SetFloat("xVelocity", xVelocity, 0.1f, Time.deltaTime);
+        animator.SetFloat("zVelocity", zVelocity, 0.1f, Time.deltaTime);
+        bool PlayAnimationRunning = MoveDirection.magnitude > 0f && isRunning;
         animator.SetBool("IsRunning", PlayAnimationRunning);
-        
     }
-    private void ApplyAim()
+    private void ApplyRotation()
     {
-        Ray ray = Camera.main.ScreenPointToRay(mouseInput);
-
-
-        if (Physics.Raycast(ray, out RaycastHit hitInfo, Mathf.Infinity, aimLayerMask))
-        {
-            Debug.DrawRay(ray.origin, ray.direction * 1000, Color.red);
-            Vector3 lookAtTarget = (hitInfo.point - transform.position);
-            lookAtTarget.y = 0;
-            lookAtTarget.Normalize();
-            transform.forward = lookAtTarget;
-            aim.position = new Vector3(hitInfo.point.x, transform.position.y+1, hitInfo.point.z);
-
-        }
+        Vector3 lookAtTarget = (player.aim.GetMousePostion() - transform.position);
+        lookAtTarget.y = 0;
+        lookAtTarget.Normalize();
+        Quaternion desiredRotation = Quaternion.LookRotation(lookAtTarget);
+        transform.rotation = Quaternion.Slerp(transform.rotation, desiredRotation, rotationSpeed * Time.deltaTime);
     }
 
     private void ApplyGravity()
@@ -117,13 +107,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void ApplyMovement()
     {
-       
         MoveDirection = new Vector3(movementInput.x, 0, movementInput.y);
-         ApplyGravity();
+        ApplyGravity();
         if (MoveDirection.magnitude > 0)
         {
             characterController.Move(MoveDirection * Time.deltaTime * Speed);
         }
     }
-   
+
 }
