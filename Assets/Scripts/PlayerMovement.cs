@@ -85,7 +85,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void ApplyRotation()
     {
-        Vector3 lookAtTarget = (player.aim.GetMousePostion() - transform.position);
+        Vector3 lookAtTarget = (player.aim.GetMouseHitInfo().point - transform.position);
         lookAtTarget.y = 0;
         lookAtTarget.Normalize();
         Quaternion desiredRotation = Quaternion.LookRotation(lookAtTarget);
