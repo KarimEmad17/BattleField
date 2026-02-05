@@ -5,7 +5,7 @@ public class PlayerAim : MonoBehaviour
 {
     private Player Player;
     private InputSystem_Actions controls;
-    private Vector2 aimInput;
+    private Vector2 mouseInput;
     [Header("Aim Visual - Laser")]
     [SerializeField] private LineRenderer aimLaser;
     [Header("Aiming control")]
@@ -85,7 +85,7 @@ public class PlayerAim : MonoBehaviour
         if (!isAimingprecisely)
             aim.position = new Vector3(aim.position.x, transform.position.y + 1, aim.position.z);
     }
-
+    public Transform Aim() => aim;
     public bool IsAimingPrecisely()
     {
         return isAimingprecisely;
@@ -106,7 +106,7 @@ public class PlayerAim : MonoBehaviour
 
     public RaycastHit GetMouseHitInfo()
     {
-        Ray ray = Camera.main.ScreenPointToRay(aimInput);
+        Ray ray = Camera.main.ScreenPointToRay(mouseInput);
         Debug.DrawRay(ray.origin, ray.direction * 1000, Color.red);
         if (Physics.Raycast(ray, out var hitInfo, Mathf.Infinity, aimLayerMask))
         {
@@ -118,7 +118,7 @@ public class PlayerAim : MonoBehaviour
     private void AssignInputEvents()
     {
         controls = Player.controls;
-        controls.Player.Look.performed += context => aimInput = context.ReadValue<Vector2>();
-        controls.Player.Look.canceled += ctx => aimInput = Vector2.zero;
+        controls.Player.Look.performed += context => mouseInput = context.ReadValue<Vector2>();
+        controls.Player.Look.canceled += ctx => mouseInput = Vector2.zero;
     }
 }

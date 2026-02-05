@@ -7,9 +7,11 @@ public class PlayerWeaponController : MonoBehaviour
     [SerializeField] private float bulletSpeed;
     [SerializeField] private Transform gunPoint;
 
+    private const float REFRENCE_BULLET_SPEED = 20f;
+    //This Is the default Speed From which our mass
 
     [SerializeField] private Transform weaponHolder;
-    [SerializeField] private Transform aim;
+    
     private void Start()
     {
         player = GetComponent<Player>();
@@ -19,7 +21,9 @@ public class PlayerWeaponController : MonoBehaviour
     {
        
         GameObject newBullet = Instantiate(bulletPrefab, gunPoint.position, Quaternion.LookRotation(gunPoint.forward));
-        newBullet.GetComponent<Rigidbody>().linearVelocity = BulletDirection() * bulletSpeed;
+        Rigidbody bulletRb = newBullet.GetComponent<Rigidbody>();
+        bulletRb.mass = REFRENCE_BULLET_SPEED / bulletSpeed; // Adjust mass to maintain
+        bulletRb.linearVelocity = BulletDirection() * bulletSpeed;
         Destroy(newBullet, 10f);
         GetComponentInChildren<Animator>().SetTrigger("Fire");
     }
@@ -30,7 +34,7 @@ public class PlayerWeaponController : MonoBehaviour
     }
     public Vector3 BulletDirection()
     {
-
+        Transform aim = player.aim.Aim();
         Vector3 direction = (aim.position - gunPoint.position).normalized;
         if(!player.aim.IsAimingPrecisely() && player.aim.Target() == null)
             direction .y = 0;
