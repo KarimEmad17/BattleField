@@ -1,25 +1,63 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerWeaponController : MonoBehaviour
 {
     private Player player;
+    private const float REFRENCE_BULLET_SPEED = 20f;
+
+    [SerializeField] private Weapon currentWeapon;
+
+    [Header("Bullet")]
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private float bulletSpeed;
     [SerializeField] private Transform gunPoint;
 
-    private const float REFRENCE_BULLET_SPEED = 20f;
     //This Is the default Speed From which our mass
 
     [SerializeField] private Transform weaponHolder;
+
+    [Header("Inventory")]
+    [SerializeField] private List<Weapon> weaponSlots;
+
     
     private void Start()
     {
         player = GetComponent<Player>();
-        player.controls.Player.Attack.performed += ctx => Shoot();
+        AssignInputEvents();
+        currentWeapon.ammo = currentWeapon.maxAmmo;
+    }
+
+    private void AssignInputEvents()
+    {
+        InputSystem_Actions controls = player.controls;
+        controls.Player.Attack.performed += ctx => Shoot();
+        controls.Player.Equipslot1.performed += ctx => EquipWeapon(0);
+        controls.Player.Equipslot2.performed += ctx => EquipWeapon(1);
+        controls.Player.DropCurrentWeapon.performed += ctx => DropWeapon();
+    }
+
+    private void EquipWeapon(int i)
+    {
+        currentWeapon = weaponSlots[i];
+    }
+
+    private void DropWeapon()
+    {
+        if (weaponSlots.Count <= 1)
+            return;
+        weaponSlots.Remove(currentWeapon);
+        currentWeapon = weaponSlots[0];
     }
     private void Shoot()
     {
-       
+        if (currentWeapon.ammo <= 0)
+        {
+            Debug.Log("No More Bullet");
+            return;
+        }
+        currentWeapon.ammo--;
         GameObject newBullet = Instantiate(bulletPrefab, gunPoint.position, Quaternion.LookRotation(gunPoint.forward));
         Rigidbody bulletRb = newBullet.GetComponent<Rigidbody>();
         bulletRb.mass = REFRENCE_BULLET_SPEED / bulletSpeed; // Adjust mass to maintain
