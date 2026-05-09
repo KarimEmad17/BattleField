@@ -20,50 +20,57 @@ public class PlayerWeaponController : MonoBehaviour
 
     [Header("Inventory")]
     [SerializeField] private List<Weapon> weaponSlots;
+    [SerializeField] private int maxWeaponSlots = 2;
 
-    
+
     private void Start()
     {
         player = GetComponent<Player>();
         AssignInputEvents();
-        currentWeapon.ammo = currentWeapon.maxAmmo;
+        currentWeapon.bulletInMagazine = currentWeapon.totalReserveAmmo;
     }
 
-    private void AssignInputEvents()
-    {
-        InputSystem_Actions controls = player.controls;
-        controls.Player.Attack.performed += ctx => Shoot();
-        controls.Player.Equipslot1.performed += ctx => EquipWeapon(0);
-        controls.Player.Equipslot2.performed += ctx => EquipWeapon(1);
-        controls.Player.DropCurrentWeapon.performed += ctx => DropWeapon();
-    }
+    #region Slots Management , Equip , picking up and dropping weapons
 
-    private void EquipWeapon(int i)
-    {
-        currentWeapon = weaponSlots[i];
-    }
+        private void EquipWeapon(int i)
+        {
+            currentWeapon = weaponSlots[i];
+        }
+        public void PickUpWeapon(Weapon newWeapon)
+        {
+            if (weaponSlots.Count >= maxWeaponSlots)
+            {
+                Debug.Log("Inventory Full");
+                return;
+            }
+            weaponSlots.Add(newWeapon);
+            currentWeapon = newWeapon;
+        }
+        private void DropWeapon()
+        {
+            if (weaponSlots.Count <= 1)
+                return;
+            weaponSlots.Remove(currentWeapon);
+            currentWeapon = weaponSlots[0];
+        }
 
-    private void DropWeapon()
-    {
-        if (weaponSlots.Count <= 1)
-            return;
-        weaponSlots.Remove(currentWeapon);
-        currentWeapon = weaponSlots[0];
-    }
+    #endregion
     private void Shoot()
     {
-        if (currentWeapon.ammo <= 0)
-        {
-            Debug.Log("No More Bullet");
+        if(!currentWeapon.CanShoot())
             return;
-        }
-        currentWeapon.ammo--;
+        
         GameObject newBullet = Instantiate(bulletPrefab, gunPoint.position, Quaternion.LookRotation(gunPoint.forward));
         Rigidbody bulletRb = newBullet.GetComponent<Rigidbody>();
         bulletRb.mass = REFRENCE_BULLET_SPEED / bulletSpeed; // Adjust mass to maintain
         bulletRb.linearVelocity = BulletDirection() * bulletSpeed;
         Destroy(newBullet, 10f);
         GetComponentInChildren<Animator>().SetTrigger("Fire");
+    }
+
+    public Weapon CurrentWeapon()
+    {
+        return currentWeapon;
     }
 
     public Transform GunPoint()
@@ -87,4 +94,23 @@ public class PlayerWeaponController : MonoBehaviour
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(gunPoint.position ,gunPoint.position + gunPoint.forward * 25f);
     }
+
+    #region Input Events
+
+        private void AssignInputEvents()
+        {
+            InputSystem_Actions controls = player.controls;
+            controls.Player.Attack.performed += ctx => Shoot();
+            controls.Player.Equipslot1.performed += ctx => EquipWeapon(0);
+            controls.Player.Equipslot2.performed += ctx => EquipWeapon(1);
+            controls.Player.DropCurrentWeapon.performed += ctx => DropWeapon();
+            controls.Player.Reload.performed += ctx =>
+            {
+               if(currentWeapon.CanReload())
+               {
+                    player.weaponVisuals.PlayReloadAnimation();
+               }
+            };
+    }
+    #endregion
 }
