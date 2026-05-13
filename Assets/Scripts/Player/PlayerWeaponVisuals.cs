@@ -10,6 +10,7 @@ public class PlayerWeaponVisuals : MonoBehaviour
    
 
     [SerializeField] private WeaponModel[] weaponsModel;
+    [SerializeField] private BackUpWeaponModel[] backUpWeaponModels;    
 
     [Header("Rig")]
     [SerializeField] private float rigWeightincreaseRate = 2f;
@@ -26,6 +27,7 @@ public class PlayerWeaponVisuals : MonoBehaviour
         player = GetComponent<Player>();
         rig = GetComponentInChildren<Rig>();
         weaponsModel = GetComponentsInChildren<WeaponModel>(true);
+        backUpWeaponModels = GetComponentsInChildren<BackUpWeaponModel>(true);
     }
     private void Start()
     {
@@ -105,6 +107,12 @@ public class PlayerWeaponVisuals : MonoBehaviour
 
     public void SwitchOnCurrentWeaponModel()
     {
+       // SwitchOffWeaponModel();
+
+        SwitchOffBackUpWeaponModel();
+        if(!player.weapon.HasOnlyOneWeapon())
+            SwitchOnBackUpWeaponModel();
+
         HoldType holdType = CurrentWeaponModel().holdType;
         SwitchAnimatorLayer((int)holdType);
         CurrentWeaponModel().gameObject.SetActive(true);
@@ -119,7 +127,28 @@ public class PlayerWeaponVisuals : MonoBehaviour
             weaponsModel[i].gameObject.SetActive(false);
         }
     }
-   
+
+    private void SwitchOffBackUpWeaponModel()
+    {
+        for (int i = 0; i < backUpWeaponModels.Length; i++)
+        {
+            backUpWeaponModels[i].gameObject.SetActive(false);
+        }
+    }
+
+    private void SwitchOnBackUpWeaponModel()
+    {
+        WeaponType weaponType = player.weapon.BackUpWeapon().weaponType;
+        foreach (BackUpWeaponModel model in backUpWeaponModels)
+        {
+            if (model.weaponType == weaponType)
+            {
+                model.gameObject.SetActive(true);
+                break;
+            }
+        }
+    }
+
     private void SwitchAnimatorLayer(int index)
     {
         for(int i= 1; i < anim.layerCount; i++)

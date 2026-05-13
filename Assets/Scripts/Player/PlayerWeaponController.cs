@@ -50,10 +50,11 @@ public class PlayerWeaponController : MonoBehaviour
         }
         private void DropWeapon()
         {
-            if (weaponSlots.Count <= 1)
+            if (HasOnlyOneWeapon())
                 return;
             weaponSlots.Remove(currentWeapon);
             currentWeapon = weaponSlots[0];
+            EquipWeapon(0);
         }
 
     #endregion
@@ -69,12 +70,17 @@ public class PlayerWeaponController : MonoBehaviour
         Destroy(newBullet, 10f);
         GetComponentInChildren<Animator>().SetTrigger("Fire");
     }
-
-    public Weapon CurrentWeapon()
+    public bool HasOnlyOneWeapon() => weaponSlots.Count <= 1;
+    public Weapon CurrentWeapon() => currentWeapon;
+    public Weapon BackUpWeapon()
     {
-        return currentWeapon;
+        foreach (Weapon weapon in weaponSlots)
+        {
+            if (weapon != currentWeapon)
+                return weapon;
+        }
+        return null;
     }
-
     public Transform GunPoint()
     {
         return gunPoint;
