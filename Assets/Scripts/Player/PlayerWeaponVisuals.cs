@@ -49,17 +49,22 @@ public class PlayerWeaponVisuals : MonoBehaviour
     public void PlayReloadAnimation()
     {
         if(isGrabingWeapon) return;
+
+        float reloadSpeed = player.weapon.CurrentWeapon().reloadSpeed;
+        anim.SetFloat("ReloadSpeed", reloadSpeed);
         anim.SetTrigger("Reload");
         ReduceRigWeight();
     }
     
-    public void PlayWeaponGrabAnimation()
+    public void PlayWeaponEquipAnimation()
     {
-        GrabType grabType = CurrentWeaponModel().grabType;
+        EquipType equipType = CurrentWeaponModel().equipType;
+        float equipmentSpeed = player.weapon.CurrentWeapon().equipSpeed;
         leftHandIK.weight = 0;
         ReduceRigWeight();
-        anim.SetFloat("WeaponGrabType", (float)grabType);
-        anim.SetTrigger("WeaponGrab");
+        anim.SetFloat("EquipType", (float)equipType);
+        anim.SetTrigger("EquipWeapon");
+        anim.SetFloat("EquipSpeed", equipmentSpeed);
 
         SetBusyGrabingWeapon(true);
     }
@@ -67,7 +72,7 @@ public class PlayerWeaponVisuals : MonoBehaviour
     public void SetBusyGrabingWeapon(bool busy)
     {
         isGrabingWeapon = busy;
-        anim.SetBool("BusyGrabbingWeapon", isGrabingWeapon);
+        anim.SetBool("BusyEquipingWeapon", isGrabingWeapon);
     }
     
 
@@ -128,7 +133,7 @@ public class PlayerWeaponVisuals : MonoBehaviour
         }
     }
 
-    private void SwitchOffBackUpWeaponModel()
+    public void SwitchOffBackUpWeaponModel()
     {
         for (int i = 0; i < backUpWeaponModels.Length; i++)
         {
@@ -136,7 +141,7 @@ public class PlayerWeaponVisuals : MonoBehaviour
         }
     }
 
-    private void SwitchOnBackUpWeaponModel()
+    public void SwitchOnBackUpWeaponModel()
     {
         WeaponType weaponType = player.weapon.BackUpWeapon().weaponType;
         foreach (BackUpWeaponModel model in backUpWeaponModels)

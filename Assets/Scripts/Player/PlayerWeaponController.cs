@@ -28,15 +28,20 @@ public class PlayerWeaponController : MonoBehaviour
         player = GetComponent<Player>();
         AssignInputEvents();
         currentWeapon.bulletInMagazine = currentWeapon.totalReserveAmmo;
+        Invoke(nameof(EquipStartingWeapon), 0.1f);
     }
 
     #region Slots Management , Equip , picking up and dropping weapons
-
+        
+        private void EquipStartingWeapon()
+        {
+            EquipWeapon(0);
+        }
         private void EquipWeapon(int i)
         {
             currentWeapon = weaponSlots[i];
             player.weaponVisuals.SwitchOffWeaponModel();
-            player.weaponVisuals.PlayWeaponGrabAnimation();
+            player.weaponVisuals.PlayWeaponEquipAnimation();
         }
         public void PickUpWeapon(Weapon newWeapon)
         {
@@ -47,6 +52,7 @@ public class PlayerWeaponController : MonoBehaviour
             }
             weaponSlots.Add(newWeapon);
             currentWeapon = newWeapon;
+            player.weaponVisuals.SwitchOnBackUpWeaponModel();
         }
         private void DropWeapon()
         {
@@ -62,12 +68,14 @@ public class PlayerWeaponController : MonoBehaviour
     {
         if(!currentWeapon.CanShoot())
             return;
-        
-        GameObject newBullet = Instantiate(bulletPrefab, gunPoint.position, Quaternion.LookRotation(gunPoint.forward));
+
+        GameObject newBullet = ObjectPool.Instance.GetBullet();
+        //Instantiate(bulletPrefab, gunPoint.position, Quaternion.LookRotation(gunPoint.forward));
+        newBullet.transform.position = gunPoint.position;
+        newBullet.transform.rotation = Quaternion.LookRotation(gunPoint.forward);
         Rigidbody bulletRb = newBullet.GetComponent<Rigidbody>();
         bulletRb.mass = REFRENCE_BULLET_SPEED / bulletSpeed; // Adjust mass to maintain
         bulletRb.linearVelocity = BulletDirection() * bulletSpeed;
-        Destroy(newBullet, 10f);
         GetComponentInChildren<Animator>().SetTrigger("Fire");
     }
     public bool HasOnlyOneWeapon() => weaponSlots.Count <= 1;
