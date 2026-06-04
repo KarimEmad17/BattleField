@@ -13,6 +13,7 @@ public class PlayerAnimationEvents : MonoBehaviour
 
     public void ReoloadIsOver()
     {
+        weaponController.SetWeaponReady(true);
         visualController.MaximizeRigWeight();
         weaponController.CurrentWeapon().ReloadBullets();
         //refile bullet
@@ -25,7 +26,7 @@ public class PlayerAnimationEvents : MonoBehaviour
     }
     public void GrabWeaponIsOver()
     {
-       
+        weaponController.SetWeaponReady(true);
         visualController.SetBusyGrabingWeapon(false);
     }
     public void SwitchOnWeaponModel() => visualController.SwitchOnCurrentWeaponModel();
